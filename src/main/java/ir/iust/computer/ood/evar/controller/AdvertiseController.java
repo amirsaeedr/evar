@@ -45,7 +45,7 @@ public class AdvertiseController {
     }
 
     @GetMapping(path = "/advertiseSpec/{advertiseId}/{key}")
-    public ResponseEntity<Object> getAllAdvertiseSpec(@PathVariable String advertiseId, @PathVariable String key) {
+    public ResponseEntity<Object> getAdvertiseSpecValue(@PathVariable String advertiseId, @PathVariable String key) {
         Advertise advertise = advertiseRepository.findById(advertiseId).orElseThrow(NullPointerException::new);
         return new ResponseEntity<>(advertise.getAdvertiseSpec().get(key), HttpStatus.OK);
     }
