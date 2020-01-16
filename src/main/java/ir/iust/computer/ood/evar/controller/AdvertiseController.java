@@ -51,7 +51,7 @@ public class AdvertiseController {
     }
 
     @PostMapping(path = "/advertiseSpec/{advertiseId}/{key}/{value}")
-    public ResponseEntity<Advertise> getAllAdvertiseSpec(@PathVariable String advertiseId, @PathVariable String key, @PathVariable String value) {
+    public ResponseEntity<Advertise> addAdvertiseSpec(@PathVariable String advertiseId, @PathVariable String key, @PathVariable String value) {
         Advertise advertise = advertiseRepository.findById(advertiseId).orElseThrow(NullPointerException::new);
         advertise.getAdvertiseSpec().put(key, value);
         return new ResponseEntity<>(advertiseRepository.save(advertise), HttpStatus.OK);
