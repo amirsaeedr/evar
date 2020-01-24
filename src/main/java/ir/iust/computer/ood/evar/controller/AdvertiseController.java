@@ -1,30 +1,78 @@
 package ir.iust.computer.ood.evar.controller;
 
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Predicate;
 import ir.iust.computer.ood.evar.model.Advertise;
+import ir.iust.computer.ood.evar.model.QAdvertise;
 import ir.iust.computer.ood.evar.repository.AdvertiseRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping(path = "/advertise", produces = "application/json")
 public class AdvertiseController {
     private static final Logger LOGGER = LoggerFactory.getLogger(AdvertiseController.class);
     private final AdvertiseRepository advertiseRepository;
-
+    private final SimpleDateFormat createDateFormat;
     public AdvertiseController(AdvertiseRepository advertiseRepository) {
         this.advertiseRepository = advertiseRepository;
+        createDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
     }
 
     @GetMapping()
-    public ResponseEntity<List<Advertise>> getAllAdvertises() {
+    public Page<Advertise> getAllAdvertises(
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "500") int size
+    ) {
         LOGGER.debug("getting all advertises.");
-        return new ResponseEntity<>(advertiseRepository.findAll(), HttpStatus.OK);
+        return advertiseRepository.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "id")));
     }
+
+    @GetMapping(path = "/search")
+    public Page<Advertise> findMatchedAdvertises(
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "500") int size,
+            @RequestParam(name = "title", required = false) String title,
+            @RequestParam(name = "createDate", required = false) String date,
+            @RequestParam(name = "price", required = false) Double price,
+            @RequestParam(name = "rate", required = false) Integer rate,
+            @RequestParam(name = "spec", required = false) String spec,
+            @RequestParam(name = "sorter",required = false,defaultValue = "title") String sorter
+    ) throws ParseException {
+        Predicate predicate = new BooleanBuilder();
+        if (title != null && !title.isEmpty()) {
+            predicate = QAdvertise.advertise.title.like(title);
+        }
+        if (date!=null && !date.isEmpty()){
+            predicate = QAdvertise.advertise.createDate.after(createDateFormat.parse(date)).and(predicate);
+        }
+        if (price != null) {
+            predicate = QAdvertise.advertise.price.eq(price).and(predicate);
+        }
+        if (rate != null) {
+            predicate = QAdvertise.advertise.rate.eq(rate).and(predicate);
+        }
+        if (spec != null && !spec.isEmpty()) {
+            for (String data : spec.split(",")) {
+                List<String> keyValue = Arrays.asList(data.split("="));
+                predicate = QAdvertise.advertise.advertiseSpec.get(keyValue.get(0)).eq(keyValue.get(1)).and(predicate);
+            }
+        }
+        return advertiseRepository.findAll(predicate, PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, sorter)));
+    }
+
 
     @GetMapping(path = "/{advertiseId}")
     public ResponseEntity<Advertise> getAdvertise(@PathVariable String advertiseId) {
