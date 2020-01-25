@@ -20,4 +20,6 @@ public interface UserService {
     User find(long id);
 
     List<User> getAll();
+
+    User login(String username, String password) throws Exception;
 }

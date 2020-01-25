@@ -32,6 +32,12 @@ public class User {
     @Column(name = "postalcode")
     private int postalcode;
 
+    @Column(name = "uuid")
+    private String uuid;
+
+    @Column(name = "token")
+    private String token;
+
 
     public User() {
     }
@@ -42,7 +48,9 @@ public class User {
                 String lastname,
                 int phone,
                 String adderss,
-                int postalcode) {
+                int postalcode,
+                String uuid,
+                String token) {
         this.username = username;
         this.password = password;
         this.name = name;
@@ -50,6 +58,24 @@ public class User {
         this.phone = phone;
         this.adderss = adderss;
         this.postalcode = postalcode;
+        this.uuid = uuid;
+        this.token = token;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public long getId() {

@@ -42,6 +42,14 @@ public class UserController {
     ));
   }
 
+  @RequestMapping(value = "/login")
+  public ResponseEntity login(@RequestBody GetUser getUser) throws Exception {
+    return ResponseHelper.response(
+            userService.login(
+                    getUser.getUsername(),
+                    getUser.getPassword()));
+  }
+
   @RequestMapping(value = "/delete", method = RequestMethod.POST)
   public ResponseEntity delete(@RequestBody long id) {
     userService.delete(id);
