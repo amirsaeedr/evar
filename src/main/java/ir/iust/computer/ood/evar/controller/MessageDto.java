@@ -2,7 +2,7 @@ package ir.iust.computer.ood.evar.controller;
 
 import ir.iust.computer.ood.evar.model.User;
 
-public class GetMessage {
+public class MessageDto {
 
     private User sender;
 

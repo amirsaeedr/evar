@@ -1,6 +1,6 @@
 package ir.iust.computer.ood.evar.controller;
 
-public class GetUser {
+public class UserDto {
 
     private String username;
 

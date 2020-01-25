@@ -16,13 +16,13 @@ public class MessageController {
     private MessageSerivce messageSerivce;
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public ResponseEntity save(@RequestBody GetMessage getMessage) {
-        return ResponseHelper.response(messageSerivce.save(getMessage.getSender(), getMessage.getMsg(), getMessage.getReceive()));
+    public ResponseEntity save(@RequestBody MessageDto messageDto) {
+        return ResponseHelper.response(messageSerivce.save(messageDto.getSender(), messageDto.getMsg(), messageDto.getReceive()));
     }
 
     @RequestMapping(value = "/get-all", method = RequestMethod.GET)
-    public ResponseEntity find(@RequestBody GetMessage getMessage) {
-        return ResponseHelper.response(messageSerivce.find(getMessage.getSender().getId(), getMessage.getReceive().getId()));
+    public ResponseEntity find(@RequestBody MessageDto messageDto) {
+        return ResponseHelper.response(messageSerivce.find(messageDto.getSender().getId(), messageDto.getReceive().getId()));
     }
 
 

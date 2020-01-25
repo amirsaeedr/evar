@@ -30,24 +30,24 @@ public class UserController {
   }
 
   @RequestMapping(value = "/add", method = RequestMethod.POST)
-  public ResponseEntity save(@RequestBody GetUser getUser) {
+  public ResponseEntity save(@RequestBody UserDto userDto) {
     return ResponseHelper.response(userService.save(
-            getUser.getUsername(),
-            getUser.getPassword(),
-            getUser.getName(),
-            getUser.getLastname(),
-            getUser.getPhone(),
-            getUser.getAdderss(),
-            getUser.getPostalcode()
+            userDto.getUsername(),
+            userDto.getPassword(),
+            userDto.getName(),
+            userDto.getLastname(),
+            userDto.getPhone(),
+            userDto.getAdderss(),
+            userDto.getPostalcode()
     ));
   }
 
   @RequestMapping(value = "/login")
-  public ResponseEntity login(@RequestBody GetUser getUser) throws Exception {
+  public ResponseEntity login(@RequestBody UserDto userDto) throws Exception {
     return ResponseHelper.response(
             userService.login(
-                    getUser.getUsername(),
-                    getUser.getPassword()));
+                    userDto.getUsername(),
+                    userDto.getPassword()));
   }
 
   @RequestMapping(value = "/delete", method = RequestMethod.POST)
